@@ -1,6 +1,7 @@
 package com.example.myapplication.presentation.list
 
 import android.view.LayoutInflater
+import android.view.OrientationEventListener
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
@@ -8,9 +9,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.myapplication.R
 import kotlin.reflect.KFunction1
 
-class PokemonAdapter(private var dataSet: List<Pokemon>) : RecyclerView.Adapter<PokemonAdapter.ViewHolder>() {
-
-    var listener: ((Pokemon) -> Unit)? = null
+class PokemonAdapter(private var dataSet: List<Pokemon>, var listener: ((Pokemon) -> Unit)? = null) : RecyclerView.Adapter<PokemonAdapter.ViewHolder>() {
 
     /**
      * Provide a reference to the type of views that you are using
@@ -21,7 +20,6 @@ class PokemonAdapter(private var dataSet: List<Pokemon>) : RecyclerView.Adapter<
         init {
             // Define click listener for the ViewHolder's View.
             textView = view.findViewById(R.id.pokemon_name)
-
         }
     }
 

@@ -9,8 +9,8 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.myapplication.R
-import com.example.myapplication.presentation.api.PokeAPI
-import com.example.myapplication.presentation.api.PokemonResponse
+import com.example.myapplication.presentation.api.PokeApi
+import com.example.myapplication.presentation.api.PokemonListResponse
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -23,7 +23,9 @@ import retrofit2.converter.gson.GsonConverterFactory
 class PokemonListFragment : Fragment() {
 
     private lateinit var recyclerView: RecyclerView
-    private val adapter = PokemonAdapter(listOf(), ::onClikedPokemon)
+
+    private val adapter = PokemonAdapter(listOf(), ::onClickedPokemon)
+
 
     private val layoutManager = LinearLayoutManager(context)
 
@@ -40,8 +42,6 @@ class PokemonListFragment : Fragment() {
 
         recyclerView = view.findViewById(R.id.pokemon_recyclerview)
 
-
-
         recyclerView.apply {
             layoutManager = this@PokemonListFragment.layoutManager
             adapter = this@PokemonListFragment.adapter
@@ -53,16 +53,16 @@ class PokemonListFragment : Fragment() {
                 .addConverterFactory(GsonConverterFactory.create())
                 .build()
 
-        val PokeAPI: PokeAPI = retrofit.create(PokeAPI::class.java)
+        val PokeApi: PokeApi = retrofit.create(PokeApi::class.java)
 
-        PokeAPI.getPokemonList().enqueue(object : Callback<PokemonResponse>{
-            override fun onFailure(call: Call<PokemonResponse>, t: Throwable) {
+        PokeApi.getPokemonList().enqueue(object : Callback<PokemonListResponse>{
+            override fun onFailure(call: Call<PokemonListResponse>, t: Throwable) {
             }
 
-            override fun onResponse(call: Call<PokemonResponse>, response: Response<PokemonResponse>) {
-                if(response.isSuccessful && response.body() != null) {
-                    val pokemonResponse: PokemonResponse = response.body()!!
-                    adapter.updateList(pokemonResponse.results)
+            override fun onResponse(call: Call<PokemonListResponse>, listResponse: Response<PokemonListResponse>) {
+                if(listResponse.isSuccessful && listResponse.body() != null) {
+                    val pokemonListResponse: PokemonListResponse = listResponse.body()!!
+                    adapter.updateList(pokemonListResponse.results)
                 }
             }
 
@@ -70,7 +70,7 @@ class PokemonListFragment : Fragment() {
 
     }
 
-    private fun onClikedPokemon(pokemon: Pokemon) {
+    private fun onClickedPokemon(pokemon: Pokemon) {
         findNavController().navigate(R.id.navigateToPokemonDetailFragment)
     }
 }

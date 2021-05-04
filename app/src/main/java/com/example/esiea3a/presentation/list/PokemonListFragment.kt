@@ -1,4 +1,4 @@
-package com.example.myapplication.presentation.list
+package com.example.esiea3a.presentation.list
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -8,9 +8,10 @@ import android.view.ViewGroup
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.myapplication.R
-import com.example.myapplication.presentation.api.PokeApi
-import com.example.myapplication.presentation.api.PokemonListResponse
+import com.example.esiea3a.R
+import com.example.esiea3a.presentation.Singletons
+import com.example.esiea3a.presentation.api.PokeApi
+import com.example.esiea3a.presentation.api.PokemonListResponse
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -26,9 +27,6 @@ class PokemonListFragment : Fragment() {
 
     private val adapter = PokemonAdapter(listOf(), ::onClickedPokemon)
 
-
-    private val layoutManager = LinearLayoutManager(context)
-
     override fun onCreateView(
             inflater: LayoutInflater, container: ViewGroup?,
             savedInstanceState: Bundle?
@@ -43,19 +41,11 @@ class PokemonListFragment : Fragment() {
         recyclerView = view.findViewById(R.id.pokemon_recyclerview)
 
         recyclerView.apply {
-            layoutManager = this@PokemonListFragment.layoutManager
+            layoutManager = LinearLayoutManager(context)
             adapter = this@PokemonListFragment.adapter
         }
 
-
-        val retrofit: Retrofit = Retrofit.Builder()
-                .baseUrl("https://pokeapi.co/api/v2/")
-                .addConverterFactory(GsonConverterFactory.create())
-                .build()
-
-        val PokeApi: PokeApi = retrofit.create(PokeApi::class.java)
-
-        PokeApi.getPokemonList().enqueue(object : Callback<PokemonListResponse>{
+        Singletons.PokeApi.getPokemonList().enqueue(object : Callback<PokemonListResponse>{
             override fun onFailure(call: Call<PokemonListResponse>, t: Throwable) {
             }
 

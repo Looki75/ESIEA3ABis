@@ -1,13 +1,11 @@
-package com.example.myapplication.presentation.list
+package com.example.esiea3a.presentation.list
 
 import android.view.LayoutInflater
-import android.view.OrientationEventListener
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.example.myapplication.R
-import kotlin.reflect.KFunction1
+import com.example.esiea3a.R
 
 class PokemonAdapter(private var dataSet: List<Pokemon>, var listener: ((Pokemon) -> Unit)? = null) : RecyclerView.Adapter<PokemonAdapter.ViewHolder>() {
 

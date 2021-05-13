@@ -1,15 +1,17 @@
-package com.example.esiea3a.presentation.api
+package com.example.myapplication.presentation.api
 
-data class PokemonDetailResponse (
-    val types: List<PokemonSlot>
+data class PokemonDetailResponse(
+        val name: String,
+        val types: List<PokemonSlot>
 )
 
 data class PokemonSlot(
-    val slot: Int,
-    val type: PokemonType
+        val slot: Int,
+        val type: PokemonType
 )
 
 data class PokemonType(
-    val name: String,
-    val url: String
+        val name: String,
+        val url: String
 )
+

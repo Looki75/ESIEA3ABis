@@ -1,29 +1,27 @@
-package com.example.esiea3a.presentation.list
+package com.example.myapplication.presentation.list
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.os.bundleOf
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.esiea3a.R
-import com.example.esiea3a.presentation.Singletons
-import com.example.esiea3a.presentation.api.PokeApi
-import com.example.esiea3a.presentation.api.PokemonListResponse
+import com.example.myapplication.R
+import com.example.myapplication.presentation.Singletons
+import com.example.myapplication.presentation.api.PokeApi
+import com.example.myapplication.presentation.api.PokemonListResponse
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
-/**
- * A simple [Fragment] subclass as the default destination in the navigation.
- */
 class PokemonListFragment : Fragment() {
 
-    private lateinit var recyclerView: RecyclerView
+    private lateinit var recyclerview: RecyclerView
 
     private val adapter = PokemonAdapter(listOf(), ::onClickedPokemon)
 
@@ -38,29 +36,45 @@ class PokemonListFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        recyclerView = view.findViewById(R.id.pokemon_recyclerview)
+        recyclerview = view.findViewById(R.id.pokemon_recyclerview)
 
-        recyclerView.apply {
+
+        recyclerview.apply {
             layoutManager = LinearLayoutManager(context)
             adapter = this@PokemonListFragment.adapter
         }
 
-        Singletons.PokeApi.getPokemonList().enqueue(object : Callback<PokemonListResponse>{
-            override fun onFailure(call: Call<PokemonListResponse>, t: Throwable) {
-            }
+        val list = getListFromCache()
+        if (list.isEmpty()) {
+            callApi()
+        } else {
 
-            override fun onResponse(call: Call<PokemonListResponse>, listResponse: Response<PokemonListResponse>) {
-                if(listResponse.isSuccessful && listResponse.body() != null) {
-                    val pokemonListResponse: PokemonListResponse = listResponse.body()!!
-                    adapter.updateList(pokemonListResponse.results)
-                }
-            }
-
-        })
-
+        }
     }
 
-    private fun onClickedPokemon(pokemon: Pokemon) {
-        findNavController().navigate(R.id.navigateToPokemonDetailFragment)
+        private fun getListFromCache(): List<Pokemon> {
+
+        }
+
+    private fun callApi() {
+        Singletons.pokeApi.getPokemonList().enqueue(object : Callback<PokemonListResponse> {
+            override fun onFailure(call: Call<PokemonListResponse>, t: Throwable) {
+                //TODO("Not yet implemented")
+            }
+
+            override fun onResponse(call: Call<PokemonListResponse>, response: Response<PokemonListResponse>) {
+                if (response.isSuccessful && response.body() != null) {
+                    val pokemonResponse: PokemonListResponse = response.body()!!
+                    adapter.updateList(pokemonResponse.results)
+                }
+            }
+        })
+    }
+
+    private fun onClickedPokemon(id : Int) {
+
+        findNavController().navigate(R.id.navigateToPokemonDetailFragment, bundleOf(
+                "pokemonId" to (id + 1)
+        ))
     }
 }

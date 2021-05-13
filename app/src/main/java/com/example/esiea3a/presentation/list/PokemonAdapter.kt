@@ -1,13 +1,15 @@
-package com.example.esiea3a.presentation.list
+package com.example.myapplication.presentation.list
 
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.example.esiea3a.R
+import com.bumptech.glide.Glide
+import com.example.myapplication.R
 
-class PokemonAdapter(private var dataSet: List<Pokemon>, var listener: ((Pokemon) -> Unit)? = null) : RecyclerView.Adapter<PokemonAdapter.ViewHolder>() {
+
+class PokemonAdapter(private var dataSet: List<Pokemon>, var listener: ((Int) -> Unit)? = null) : RecyclerView.Adapter<PokemonAdapter.ViewHolder>() {
 
     /**
      * Provide a reference to the type of views that you are using
@@ -17,10 +19,9 @@ class PokemonAdapter(private var dataSet: List<Pokemon>, var listener: ((Pokemon
         val textView: TextView
         init {
             // Define click listener for the ViewHolder's View.
-            textView = view.findViewById(R.id.pokemon_name)
+           textView = view.findViewById(R.id.pokemon_name)
         }
     }
-
 
     fun updateList(list: List<Pokemon>) {
         dataSet = list
@@ -30,8 +31,7 @@ class PokemonAdapter(private var dataSet: List<Pokemon>, var listener: ((Pokemon
     // Create new views (invoked by the layout manager)
     override fun onCreateViewHolder(viewGroup: ViewGroup, viewType: Int): ViewHolder {
         // Create a new view, which defines the UI of the list item
-        val view = LayoutInflater.from(viewGroup.context)
-                .inflate(R.layout.pokemon_item, viewGroup, false)
+        val view = LayoutInflater.from(viewGroup.context).inflate(R.layout.pokemon_item, viewGroup, false)
 
         return ViewHolder(view)
     }
@@ -41,14 +41,26 @@ class PokemonAdapter(private var dataSet: List<Pokemon>, var listener: ((Pokemon
 
         // Get element from your dataset at this position and replace the
         // contents of the view with that element
-        val pokemon: Pokemon = dataSet[position]
+        val pokemon : Pokemon = dataSet[position]
         viewHolder.textView.text = pokemon.name
         viewHolder.itemView.setOnClickListener {
-             listener?.invoke(pokemon)
+            listener?.invoke(position)
         }
+
+        Glide
+                .with(viewHolder.itemView.context)
+                .load("https://raw.githubsercontent.com/PokeAPI/sprites/master/pokemon/${position + 1}.png")
+                .centerCrop
+                .into
+
+
+
+
     }
 
-    // Return the size of your dataset (invoked by the layout manager)
-    override fun getItemCount() = dataSet.size
+    override fun getItemCount(): Int {
 
+        return dataSet.size
+    }
 }
+

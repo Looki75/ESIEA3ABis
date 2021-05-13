@@ -1,6 +1,6 @@
-package com.example.esiea3a.presentation.list
+package com.example.myapplication.presentation.list
 
-data class Pokemon (
+data class Pokemon(
     val name: String,
     val url: String
-    )
+)

@@ -6,6 +6,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.os.bundleOf
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -25,9 +27,11 @@ class PokemonListFragment : Fragment() {
 
     private val adapter = PokemonAdapter(listOf(), ::onClickedPokemon)
 
+    private val viewModel: PokemonListViewModel by viewModels()
+
     override fun onCreateView(
-            inflater: LayoutInflater, container: ViewGroup?,
-            savedInstanceState: Bundle?
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_pokemon_list, container, false)
@@ -44,49 +48,18 @@ class PokemonListFragment : Fragment() {
             adapter = this@PokemonListFragment.adapter
         }
 
-        val list: List<Pokemon> = getListFromCache()
-        if (list.isEmpty()) {
-            callApi()
-        } else {
-            showList(list)
-        }
-    }
-
-        private fun getListFromCache(): List<Pokemon> {
-return emptyList()
-       }
-
-    private fun saveListIntoCache() {
-        //TODO
-    }
-
-    private fun callApi() {
-        Singletons.pokeApi.getPokemonList().enqueue(object : Callback<PokemonListResponse> {
-            override fun onFailure(call: Call<PokemonListResponse>, t: Throwable) {
-                //TODO("Not yet implemented")
-            }
-
-            override fun onResponse(call: Call<PokemonListResponse>, response: Response<PokemonListResponse>) {
-                if (response.isSuccessful && response.body() != null) {
-                    val pokemonResponse: PokemonListResponse = response.body()!!
-                    saveListIntoCache()
-                    showList(pokemonResponse.results)
-
-
-                }
-            }
+        viewModel.pokeList.observe(viewLifecycleOwner, Observer { list ->
+            adapter.updateList(list)
         })
+
     }
 
+    private fun onClickedPokemon(id: Int) {
 
-    private fun showList(pokeList: List<Pokemon>) {
-        adapter.updateList(pokeList)
-    }
-
-    private fun onClickedPokemon(id : Int) {
-
-        findNavController().navigate(R.id.navigateToPokemonDetailFragment, bundleOf(
+        findNavController().navigate(
+            R.id.navigateToPokemonDetailFragment, bundleOf(
                 "pokemonId" to (id + 1)
-        ))
+            )
+        )
     }
 }

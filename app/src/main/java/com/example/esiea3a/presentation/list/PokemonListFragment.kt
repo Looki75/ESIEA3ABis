@@ -44,17 +44,21 @@ class PokemonListFragment : Fragment() {
             adapter = this@PokemonListFragment.adapter
         }
 
-        val list = getListFromCache()
+        val list: List<Pokemon> = getListFromCache()
         if (list.isEmpty()) {
             callApi()
         } else {
-
+            showList(list)
         }
     }
 
         private fun getListFromCache(): List<Pokemon> {
+return emptyList()
+       }
 
-        }
+    private fun saveListIntoCache() {
+        //TODO
+    }
 
     private fun callApi() {
         Singletons.pokeApi.getPokemonList().enqueue(object : Callback<PokemonListResponse> {
@@ -65,10 +69,18 @@ class PokemonListFragment : Fragment() {
             override fun onResponse(call: Call<PokemonListResponse>, response: Response<PokemonListResponse>) {
                 if (response.isSuccessful && response.body() != null) {
                     val pokemonResponse: PokemonListResponse = response.body()!!
-                    adapter.updateList(pokemonResponse.results)
+                    saveListIntoCache()
+                    showList(pokemonResponse.results)
+
+
                 }
             }
         })
+    }
+
+
+    private fun showList(pokeList: List<Pokemon>) {
+        adapter.updateList(pokeList)
     }
 
     private fun onClickedPokemon(id : Int) {

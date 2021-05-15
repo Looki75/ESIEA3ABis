@@ -53,7 +53,7 @@ class PokemonAdapter(private var dataSet: List<Pokemon>, var listener: ((Int) ->
 
         Glide
                 .with(viewHolder.itemView.context)
-                .load("https://raw.githubsercontent.com/PokeAPI/sprites/master/pokemon/${position + 1}.png")
+                .load("https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${position + 1}.png")
                 .centerCrop()
                 .into(viewHolder.imageView)
 
